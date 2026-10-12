@@ -1,0 +1,17 @@
+name: Validate and test
+on: [pull_request, push]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      # Claude Code pinned to the version the mod is tested on. No API key or login:
+      # validate and test only read the plugin and run its own tests.
+      - run: npm install -g @anthropic-ai/claude-code@2.1.296
+      - run: claude --version
+      - run: claude plugin validate --strict .
+      - run: claude plugin test .
