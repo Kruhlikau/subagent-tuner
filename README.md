@@ -3,7 +3,7 @@
 **A Claude Code mod that picks the model and reasoning effort of every subagent, so a review runs on Opus and a file search doesn't.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.3-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.4-informational.svg)](CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
 [![Plugin scan](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml)
 
@@ -93,8 +93,8 @@ recommendation and inherits the session's model and effort.
 - **Reads** each Agent call's subagent type, description, model and effort, and the length of its prompt. It never sends anything anywhere: no network calls.
 - **Changes** only the `model` and `effort` fields of Agent calls.
 - **Stores** the mode and the saved default in Claude Code's own plugin store.
-- **Runs** `sh` (macOS, Linux) or `powershell.exe` (Windows), only to wait for your answer in the pane: once to check which shell exists, then one waiting process per open pane.
-- **Writes** an empty sentinel file to `.waits/` in the plugin's own folder when you answer in the pane; the waiting process deletes it.
+- **Runs** `sh` (macOS, Linux) or `powershell.exe` (Windows), only to wait for your answer in the pane: once to check which shell exists, then per open pane one process to remove the probe file below and one to wait.
+- **Writes** an empty sentinel file to `.waits/` in the plugin's own folder when you answer in the pane; the waiting process deletes it. Before a pane opens it writes and removes an empty `.probe` file there, to be sure the folder takes a write.
 
 ## Requirements
 
@@ -103,7 +103,7 @@ with Git for Windows' default settings.
 
 ## Troubleshooting
 
-- **Dialogs instead of the pane:** the terminal is narrower than 144 columns. Widen it or zoom out.
+- **Dialogs instead of the pane:** the terminal is narrower than 144 columns (widen it or zoom out), or the plugin's `.waits/` folder cannot be written (the toast says why).
 - **Subagents still on Opus:** you are in Manual and the agent set the model itself, or Auto has no saved default for the model. Switch to Auto and set the default.
 - **An update didn't change anything:** run the update commands above. Claude Code runs the installed copy from its cache, keyed by version.
 - **Two bands or two toasts:** the mod is loaded twice, for example installed and also passed with `--plugin-dir`. Keep one.

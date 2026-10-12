@@ -39,6 +39,8 @@ export type Options = {
     /** The probe for a shell to wait in answers only once this settles. */
     probeGate?: Promise<void>
     isOpenBroken?: boolean
+    /** Writes into the waits folder are refused: `sentinel` only the sentinel (the probe goes through), `everything` the probe too. */
+    unwritable?: 'sentinel' | 'everything'
   }
   /** Only the first store write never settles. */
   stallFirstWrite?: boolean
@@ -186,6 +188,9 @@ export function engine(on: On, options: Options = {}) {
   const starts: string[] = []
   /** The sentinels the plugin wrote with `$.fs.write`. */
   const written: string[] = []
+  /** The probe files the plugin wrote to find out the folder takes a write, and the ones it then removed. */
+  const probed: string[] = []
+  const removed: string[] = []
   /** The waits the plugin started: which shell, on which sentinel. */
   const waits: { shell: string; sentinel: string }[] = []
   /** The sentinels a wait saw appear and removed. */
@@ -198,8 +203,21 @@ export function engine(on: On, options: Options = {}) {
     const pane = options.pane
 
     on('fs.write', (_$, e) => {
-      written.push(samePath(e.path))
-      touched.add(samePath(e.path))
+      const path = samePath(e.path)
+      const isProbe = path.endsWith('.probe')
+
+      if (pane.unwritable === 'everything' || (pane.unwritable === 'sentinel' && !isProbe)) {
+        return { deny: 'EACCES: permission denied' }
+      }
+
+      if (isProbe) {
+        probed.push(path)
+
+        return { value: undefined }
+      }
+
+      written.push(path)
+      touched.add(path)
       wakers.splice(0).forEach(wake => wake())
 
       return { value: undefined }
@@ -218,6 +236,13 @@ export function engine(on: On, options: Options = {}) {
 
       if (script === 'exit 0') {
         await pane.probeGate
+
+        return result()
+      }
+
+      // The probe's cleanup: removes the file and ends.
+      if (script.startsWith('rm -f') || script.startsWith('Remove-Item')) {
+        removed.push(samePath(shell === 'sh' ? e.argv.at(-1)! : /-LiteralPath '((?:[^']|'')*)'/.exec(script)![1]!.replace(/''/g, "'")))
 
         return result()
       }
@@ -275,7 +300,7 @@ export function engine(on: On, options: Options = {}) {
     gets,
     beneath,
     store,
-    panes: { starts, written, waits, consumed, opened, closed, open },
+    panes: { starts, written, probed, removed, waits, consumed, opened, closed, open },
     /** Makes the n-th state read from now on throw. */
     failStateReadIn: (n: number) => {
       failReadAt = reads + n
@@ -376,6 +401,7 @@ export const valueOf = async (ui: PaneUi, key: string) => (await ui.find({ key }
 // pane opened is closed, and no entry of the launch is left to be drawn.
 export async function expectClean($: Engine, panes: ReturnType<typeof engine>['panes']) {
   expect(panes.consumed.slice().sort()).toEqual(panes.written.slice().sort())
+  expect(panes.removed.slice().sort()).toEqual(panes.probed.slice().sort())
   expect(panes.opened.map(one => one.id).sort()).toEqual(panes.closed.slice().sort())
 
   for (const one of panes.opened) {
