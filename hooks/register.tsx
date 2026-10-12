@@ -501,7 +501,7 @@ async function finish($: Host, id: string, decision: 'run' | 'save' | 'cancel' |
   try {
     await $.fs.write(session.sentinel, '')
   } catch {
-    $.ui.toast('Subagent tuner: could not release the pane; it applies the suggestion when its wait ends')
+    $.ui.toast('Subagent tuner: could not release the pane; your choice applies when its wait ends')
   }
 }
 

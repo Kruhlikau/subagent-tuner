@@ -567,7 +567,7 @@ for (const one of [
 
     const outcome = await call
 
-    expect(toasts).toContain('Subagent tuner: could not release the pane; it applies the suggestion when its wait ends')
+    expect(toasts).toContain('Subagent tuner: could not release the pane; your choice applies when its wait ends')
 
     if (one.deny === undefined) {
       expect(seen[0]).toMatchObject({ model: 'haiku', effort: 'high' })
