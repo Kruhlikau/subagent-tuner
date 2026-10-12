@@ -6,6 +6,10 @@
 [![Version](https://img.shields.io/badge/version-0.1.3-informational.svg)](CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
 
+<img src="docs/media/demo.gif" alt="Demo: in Manual a pick pane asks before the subagent runs; in Auto the saved default sonnet / high replaces the opus the agent asked for" width="900">
+
+<sub>Illustration of the behaviour described below, not a screen recording. The real band:</sub>
+
 <img src="docs/media/band.png" alt="The tuner's band above the prompt: Tuner, Manual, Auto (active), default sonnet / high, Reset" width="696">
 
 When the agent starts a subagent, the tuner settles its model and effort: by asking you, by a
