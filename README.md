@@ -6,6 +6,7 @@
 [![Version](https://img.shields.io/badge/version-0.1.4-informational.svg)](CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
 [![Plugin scan](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml)
+[![Validate and test](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml)
 
 <img src="docs/media/demo.gif" alt="Recording from a real Claude Code session: in Manual a pick pane asks before the subagent runs; in Auto the saved default sonnet / high replaces the opus the agent asked for" width="900">
 
