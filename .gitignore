@@ -1,0 +1,5 @@
+# Sentinels of the pane wait (hooks/register.tsx); each wait removes its own.
+.waits/
+# Written by Claude Code when it loads the mod: the API types for the editor and tsc.
+.claude-plugin/types/
+.DS_Store

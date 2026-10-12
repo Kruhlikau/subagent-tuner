@@ -1,0 +1,15 @@
+{
+  "name": "subagent-tuner",
+  "description": "subagent-tuner: a Claude Code mod that picks the model and effort of every subagent.",
+  "owner": {
+    "name": "Aleh Kruhlikau",
+    "url": "https://github.com/Kruhlikau"
+  },
+  "plugins": [
+    {
+      "name": "subagent-tuner",
+      "source": "./",
+      "description": "Picks the model and reasoning effort of every subagent: a recommendation by task kind, a band above the prompt, and a saved default that wins."
+    }
+  ]
+}
