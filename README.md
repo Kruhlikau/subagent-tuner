@@ -3,7 +3,7 @@
 **A Claude Code mod that picks the model and reasoning effort of every subagent, so a review runs on Opus and a file search doesn't.**
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.4-informational.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.5-informational.svg)](CHANGELOG.md)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
 [![Plugin scan](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml)
 [![Validate and test](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml)
@@ -72,10 +72,12 @@ dismiss them. Switch to **Auto** before you leave a session to run on its own.
 
 **Auto** never asks. Your saved default wins, even over a model or effort the agent set itself
 (say, a rule in `CLAUDE.md` that makes it pass `model: "opus"`). A field left at `rec.` keeps
-what the call set, else takes the recommendation. A toast says what was applied:
+what the call set, else takes the recommendation (for a custom agent, see below: none). A toast says what was applied:
 `Subagent (overridden) -> sonnet/high`.
 
 ## The recommendation
+
+For built-in agents (`general-purpose`, `Explore`, `Plan` and the like):
 
 | Task kind (from the subagent's type, else its description) | Model | Effort |
 | --- | --- | --- |
@@ -86,22 +88,26 @@ what the call set, else takes the recommendation. A toast says what was applied:
 A prompt longer than 4,000 characters gets one step more effort. Any other task gets no
 recommendation and inherits the session's model and effort.
 
-**The tuner's pick beats the agent definition.** The mod sees only the Agent call, not the agent's
-definition file, so a model or effort set in its frontmatter is invisible to it. With no saved
-default, the recommendation read from the agent type or description replaces it: a custom
-`code-reviewer` agent pinned to `sonnet` would start on `opus`/`high`. To let the frontmatter win
-for one launch, pick `inherit` for that field in Manual, which removes it from the call.
+**A custom agent is left to its own definition.** The mod sees only the Agent call, not the agent's
+definition file, so a model or effort set in its frontmatter is invisible to it. It does see which agent
+types Claude Code offers, and whether each is built in. For an agent you or a plugin defined, with no
+saved default, it recommends nothing, so a custom `code-reviewer` pinned to `sonnet` stays on `sonnet`:
+Auto leaves the call untouched, and Manual's pane starts on `inherit`. It does not read the pinned
+value, so the pane shows `inherit`, not `sonnet`. A saved default still applies to it, and so does
+a model or effort you pick in Manual's pane. Built-in agents such as `general-purpose` get the
+recommendation above.
 
 ## Where it stays out of the way
 
 - **`claude -p` and SDK hosts:** nothing is changed, so scripted runs and evals measure what they ask for.
 - **Forks:** never touched; a fork ignores model and effort anyway.
 - **VS Code extension:** it can't show the band there, so it never asks and behaves as Auto.
+- **Custom agents:** with no saved default their model and effort are left to the agent's own definition.
 - **Manual:** a call that already set both its model and its effort goes through as set.
 
 ## What it can read, write and run
 
-- **Reads** each Agent call's subagent type, description, model and effort, and the length of its prompt. It never sends anything anywhere: no network calls.
+- **Reads** each Agent call's subagent type, description, model and effort, and the length of its prompt, and which agent types Claude Code offers and whether each is built in (never the agent definitions). It never sends anything anywhere: no network calls.
 - **Changes** only the `model` and `effort` fields of Agent calls.
 - **Stores** the mode and the saved default in Claude Code's own plugin store.
 - **Runs** `sh` (macOS, Linux) or `powershell.exe` (Windows), only to wait for your answer in the pane: once to check which shell exists, then per open pane one process to remove the probe file below and one to wait.

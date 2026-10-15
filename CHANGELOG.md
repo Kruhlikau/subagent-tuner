@@ -1,7 +1,8 @@
 # Changelog
 
-## Unreleased
-- README: Manual is the mode after install and what happens when a question goes unanswered; the tuner's pick wins over a model or effort in an agent's frontmatter, and `inherit` lets the frontmatter win (noted by the k-mods maintainer).
+## 0.1.5
+- A custom agent's own model and effort are no longer overridden when no default is saved. The mod cannot read an agent's definition, so it now notes which agent types the engine offers as built-in; for any other type the recommendation is `inherit`: Auto leaves the call untouched and Manual's pane starts on `inherit`. A saved default still applies, and a field left at `rec.` inherits. Built-in agents are recommended as before (noted by the k-mods maintainer).
+- README: Manual is the mode after install and what happens when a question goes unanswered.
 
 ## 0.1.4
 - The pane no longer starts the subagent after a Cancel when the answer file could not be written: a decision recorded before the wait ran out is honoured (Cancel cancels, Run and save still saves).

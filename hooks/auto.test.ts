@@ -1,6 +1,6 @@
 import { expect, mock, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
-import { BUILD, REVIEW, SEARCH, UNTOUCHED, engine, mountBand, start } from './harness'
+import { BUILD, CUSTOM, REVIEW, SEARCH, UNTOUCHED, engine, mountBand, offerAgent, start } from './harness'
 
 test('a call that sets both fields passes untouched and asks nothing', async ($, on) => {
   const { seen, toasts, asked } = engine(on)
@@ -194,4 +194,69 @@ test('a stored default that is not a known choice is never applied', async ($, o
   await $.tool.call(REVIEW)
 
   expect(seen[0]).toMatchObject({ model: 'opus', effort: 'high' })
+})
+
+// A custom agent's definition may pin a model and an effort the tuner never sees, so with no saved
+// default it recommends nothing rather than replace them.
+test('auto: a custom agent with no saved default passes untouched, a built-in one is recommended', async ($, on) => {
+  const { seen, toasts } = engine(on, { store: { mode: 'auto' } })
+
+  await start($)
+  await offerAgent($, 'acme-reviewer')
+  await $.tool.call(CUSTOM)
+  await $.tool.call({ ...CUSTOM, subagent_type: 'general-purpose' })
+
+  expect(seen).toEqual([UNTOUCHED('Review the diff'), { model: 'opus', effort: 'high', description: 'Review the diff' }])
+  expect(toasts).toEqual(['Subagent -> opus/high'])
+})
+
+test('auto: a custom agent the offers never named is custom too', async ($, on) => {
+  const { seen, toasts } = engine(on, { store: { mode: 'auto' } })
+
+  await start($)
+  await $.tool.call(CUSTOM)
+
+  expect(seen).toEqual([UNTOUCHED('Review the diff')])
+  expect(toasts).toEqual([])
+})
+
+test('auto: the saved default still replaces model and effort of a custom agent', async ($, on) => {
+  const { seen, toasts } = engine(on, { store: { mode: 'auto', saved: { model: 'sonnet', effort: 'high' } } })
+
+  await start($)
+  await offerAgent($, 'acme-reviewer')
+  await $.tool.call(CUSTOM)
+
+  expect(seen).toEqual([{ model: 'sonnet', effort: 'high', description: 'Review the diff' }])
+  expect(toasts).toEqual(['Subagent -> sonnet/high'])
+})
+
+test('auto: a saved effort left to rec. stays inherited for a custom agent', async ($, on) => {
+  const { seen } = engine(on, { store: { mode: 'auto', saved: { model: 'sonnet', effort: null } } })
+
+  await start($)
+  await offerAgent($, 'acme-reviewer')
+  await $.tool.call(CUSTOM)
+
+  expect(seen).toEqual([{ model: 'sonnet', effort: undefined, description: 'Review the diff' }])
+})
+
+test('the offer hook lets every offer through unchanged', async ($, on) => {
+  engine(on)
+
+  await start($)
+
+  expect(await offerAgent($, 'acme-reviewer')).toEqual({ isOffered: true })
+  expect(await offerAgent($, 'Plan', true)).toEqual({ isOffered: true })
+})
+
+test('the offer hook swallows its own errors and still lets the offer through', async ($, on) => {
+  engine(on)
+
+  await start($)
+
+  // A malformed event (no provider) makes the record throw.
+  const result = await $.agent.offer({ agent: 'broken', description: '', source: 'plugin' } as never)
+
+  expect(result).toEqual({ isOffered: true })
 })

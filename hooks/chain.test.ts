@@ -1,6 +1,6 @@
 import { expect, mock, test } from 'claude-code/testing'
 import type { Engine } from 'claude-code/testing'
-import { ABORTER, BUILD, CHANGE, MAIN, REVIEW, SAVE_LABEL, SEARCH, UNTOUCHED, drawn, engine, start } from './harness'
+import { ABORTER, BUILD, CHANGE, CUSTOM, MAIN, REVIEW, SAVE_LABEL, SEARCH, UNTOUCHED, drawn, engine, offerAgent, start } from './harness'
 
 test('chain: the first dialog names the agent and carries the selection and what to do', async ($, on) => {
   const { asked, seen, diagnostics } = engine(on)
@@ -550,4 +550,15 @@ test('chain: a dispatch aborted while a dialog was open starts nothing', { plugi
   await clock.settle()
 
   expect(seen).toEqual([])
+})
+
+test('chain: a custom agent is preselected as inherit, and Run starts the call unchanged', async ($, on) => {
+  const { asked, seen } = engine(on)
+
+  await start($)
+  await offerAgent($, 'acme-reviewer')
+  await $.tool.call(CUSTOM)
+
+  expect(asked[0]!.labels).toEqual(['Run as the model asked', CHANGE, 'Cancel'])
+  expect(seen).toEqual([UNTOUCHED('Review the diff')])
 })
