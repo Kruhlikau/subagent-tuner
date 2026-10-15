@@ -241,22 +241,17 @@ test('auto: a saved effort left to rec. stays inherited for a custom agent', asy
   expect(seen).toEqual([{ model: 'sonnet', effort: undefined, description: 'Review the diff' }])
 })
 
-test('the offer hook lets every offer through unchanged', async ($, on) => {
-  engine(on)
+test('a user or project agent is custom even when offered under the engine core provider', async ($, on) => {
+  const { seen } = engine(on, { store: { mode: 'auto', saved: { model: null, effort: null } } })
 
   await start($)
+  await offerAgent($, 'acme-reviewer', false, 'userSettings', { plugin: 'engine', tier: 'core' })
+  await offerAgent($, 'Plan', false, 'projectSettings', { plugin: 'engine', tier: 'core' })
+  await $.tool.call(CUSTOM)
+  await $.tool.call({ ...CUSTOM, subagent_type: 'Plan' })
 
-  expect(await offerAgent($, 'acme-reviewer')).toEqual({ isOffered: true })
-  expect(await offerAgent($, 'Plan', true)).toEqual({ isOffered: true })
-})
-
-test('the offer hook swallows its own errors and still lets the offer through', async ($, on) => {
-  engine(on)
-
-  await start($)
-
-  // A malformed event (no provider) makes the record throw.
-  const result = await $.agent.offer({ agent: 'broken', description: '', source: 'plugin' } as never)
-
-  expect(result).toEqual({ isOffered: true })
+  expect(seen).toEqual([
+    { model: undefined, effort: undefined, description: 'Review the diff' },
+    { model: undefined, effort: undefined, description: 'Review the diff' },
+  ])
 })

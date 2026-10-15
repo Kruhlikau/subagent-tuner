@@ -115,7 +115,7 @@ recommendation above.
 
 ## Requirements
 
-Claude Code 2.1.287 or later (mods). Tested on 2.1.295 and 2.1.296 on macOS and on Windows 11
+Claude Code 2.1.287 or later (mods). Tested on 2.1.295, 2.1.296 and 2.1.300 on macOS and on Windows 11
 with Git for Windows' default settings.
 
 ## Troubleshooting

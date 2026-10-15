@@ -637,7 +637,8 @@ export const register: Register = on => {
   // Only observes: the offer goes on as it came, whatever the record does.
   on('agent.offer', (_$, e, next) => {
     try {
-      offers.set(e.agent, e.provider.plugin === 'engine' && e.provider.tier === 'core')
+      // `source` tells a built-in from a user's agent of its name; any doubt counts as custom.
+      offers.set(e.agent, e.source === 'built-in' && e.provider.plugin === 'engine' && e.provider.tier === 'core')
     } catch {
       // Unrecorded, the type is judged by its name.
     }

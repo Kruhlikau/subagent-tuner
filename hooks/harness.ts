@@ -377,13 +377,13 @@ export const labelOf = async (ui: Band, key: string) => String((await ui.find({ 
 // The engine raises `agent.offer` for each type when it builds the agent listing, before the model can
 // name one. The fixtures' types stand for built-in agents (the tuner's own recommendation applies to
 // them); a test of a custom agent offers its own type with `offerAgent`.
-export const offerAgent = ($: Engine, agent: string, isBuiltIn = false) =>
-  $.agent.offer({
-    agent,
-    description: '',
-    source: isBuiltIn ? 'built-in' : 'plugin',
-    provider: isBuiltIn ? { plugin: 'engine', tier: 'core' } : { plugin: 'acme', tier: 'append' },
-  })
+export const offerAgent = (
+  $: Engine,
+  agent: string,
+  isBuiltIn = false,
+  source: string = isBuiltIn ? 'built-in' : 'plugin',
+  provider = isBuiltIn ? { plugin: 'engine', tier: 'core' } : { plugin: 'acme', tier: 'append' },
+) => $.agent.offer({ agent, description: '', source, provider } as never)
 
 export const start = async ($: Engine) => {
   for (const one of [REVIEW, BUILD, SEARCH]) {
