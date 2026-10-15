@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.7
+- Auto no longer leaves a built-in agent without a recommendation when Claude Code announces it after the call: the call is judged by the type's name (anything unknown is custom), and at the agent's spawn, which says who provides the type, the recommended model is applied if the engine provides it. The spawn takes a model only, so the effort recommendation is not applied in that case. Manual and a saved default are unchanged. Checked in live sessions of Claude Code 2.1.295 and 2.1.300: the announcement can come after the call and the spawn.
+
 ## 0.1.6
 - The stated minimum is Claude Code 2.1.295, the oldest version the mod was tested on (0.1.5 relies on the `agent.offer` event, whose first version was not confirmed). `plugin.json` has no field for a minimum, so it is in the README and the description.
 

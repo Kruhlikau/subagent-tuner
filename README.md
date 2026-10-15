@@ -95,7 +95,9 @@ saved default, it recommends nothing, so a custom `code-reviewer` pinned to `son
 Auto leaves the call untouched, and Manual's pane starts on `inherit`. It does not read the pinned
 value, so the pane shows `inherit`, not `sonnet`. A saved default still applies to it, and so does
 a model or effort you pick in Manual's pane. Built-in agents such as `general-purpose` get the
-recommendation above.
+recommendation above. Claude Code can announce a type after the call has been made; if the type then
+turns out to be built in, Auto still recommends the model for it (not the effort, which the spawn
+cannot take), so a late announcement costs only the effort recommendation.
 
 ## Where it stays out of the way
 
