@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.5-informational.svg)](CHANGELOG.md)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.287%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-2.1.295%2B-d97757.svg)](https://claude.com/blog/claude-code-mods)
 [![Plugin scan](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/scan.yml)
 [![Validate and test](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml/badge.svg)](https://github.com/Kruhlikau/subagent-tuner/actions/workflows/validate.yml)
 
@@ -19,7 +19,7 @@ recommendation for the kind of task, or by your saved default.
 
 ## Install
 
-Inside Claude Code (2.1.287 or later):
+Inside Claude Code (2.1.295 or later):
 
 ```
 /plugin install subagent-tuner --marketplace Kruhlikau/subagent-tuner
@@ -115,7 +115,7 @@ recommendation above.
 
 ## Requirements
 
-Claude Code 2.1.287 or later (mods). Tested on 2.1.295, 2.1.296 and 2.1.300 on macOS and on Windows 11
+Claude Code 2.1.295 or later (mods). Tested on 2.1.295, 2.1.296 and 2.1.300 on macOS and on Windows 11
 with Git for Windows' default settings.
 
 ## Troubleshooting

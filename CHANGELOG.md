@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.6
+- The stated minimum is Claude Code 2.1.295, the oldest version the mod was tested on (0.1.5 relies on the `agent.offer` event, whose first version was not confirmed). `plugin.json` has no field for a minimum, so it is in the README and the description.
+
 ## 0.1.5
 - A custom agent's own model and effort are no longer overridden when no default is saved. The mod cannot read an agent's definition, so it now notes which agent types the engine offers as built-in; for any other type the recommendation is `inherit`: Auto leaves the call untouched and Manual's pane starts on `inherit`. A saved default still applies, and a field left at `rec.` inherits. Built-in agents are recommended as before (noted by the k-mods maintainer).
 - README: Manual is the mode after install and what happens when a question goes unanswered.
