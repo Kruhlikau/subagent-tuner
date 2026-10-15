@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- README: Manual is the mode after install and what happens when a question goes unanswered; the tuner's pick wins over a model or effort in an agent's frontmatter, and `inherit` lets the frontmatter win (noted by the k-mods maintainer).
+
 ## 0.1.4
 - The pane no longer starts the subagent after a Cancel when the answer file could not be written: a decision recorded before the wait ran out is honoured (Cancel cancels, Run and save still saves).
 - A plugin folder that takes no write now falls back to the dialogs at once, instead of a pane the person would wait ten minutes on.

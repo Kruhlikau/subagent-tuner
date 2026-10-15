@@ -66,6 +66,10 @@ r: Run   d: Run and save as default   c: Cancel
 On a narrower terminal it is a short chain of dialogs. A dismissed question starts the subagent
 with what was shown; nothing is ever held back.
 
+Manual is the mode right after install, so every subagent launch asks first. The pane goes ahead
+with the live selection after ten minutes without an answer; the dialogs wait until you answer or
+dismiss them. Switch to **Auto** before you leave a session to run on its own.
+
 **Auto** never asks. Your saved default wins, even over a model or effort the agent set itself
 (say, a rule in `CLAUDE.md` that makes it pass `model: "opus"`). A field left at `rec.` keeps
 what the call set, else takes the recommendation. A toast says what was applied:
@@ -81,6 +85,12 @@ what the call set, else takes the recommendation. A toast says what was applied:
 
 A prompt longer than 4,000 characters gets one step more effort. Any other task gets no
 recommendation and inherits the session's model and effort.
+
+**The tuner's pick beats the agent definition.** The mod sees only the Agent call, not the agent's
+definition file, so a model or effort set in its frontmatter is invisible to it. With no saved
+default, the recommendation read from the agent type or description replaces it: a custom
+`code-reviewer` agent pinned to `sonnet` would start on `opus`/`high`. To let the frontmatter win
+for one launch, pick `inherit` for that field in Manual, which removes it from the call.
 
 ## Where it stays out of the way
 
